@@ -1,23 +1,24 @@
 const mongoose = require("mongoose")
-// connection string
 
 mongoose.connect("mongodb://localhost:27017/claimsPortal", { useNewUrlParser: true })
 
 
 //model
 
-const User = mongoose.model("employee",
+const Employee = mongoose.model("Employee",
     {
-        empname: String,
+        username: String,
         employeeID: Number,
         jobtitle: String,
         location: String,
         password: String,
         admin: String,
-        claims: []
+        claims: [],
+        accepted:String
+
 
     }
 )
 module.exports = {
-    User
+    Employee
 }

@@ -56,16 +56,52 @@ app.post("/empForm", (req, res) => {
     })
 })
 
-//admin login-console
 
-app.post("/adminLogin", (req, res) => {
+//view status
 
-    ds.adminLogin(req.body.studentid).then(result => {
+app.post("/viewStatus", (req, res) => {
+    ds.viewStatus(req.body.empid1).then(result => {
         res.status(result.statusCode).json(result)
     })
 })
 
+//delete claim
 
-app.listen(3000, () => {
-    console.log("server started at 3000");
+app.post("/deleteClaim", (req, res) => {
+
+    ds.deleteClaim(req.body.claimid).then(result => {
+        res.status(result.statusCode).json(result)
+
+    })
+})
+
+//admin console
+
+
+app.get("/adminLogin", (req, res) => {
+    ds.adminLogin().then(result => {
+        console.log("hy",result);
+        res.status(result.statusCode).json(result);
+    });
+});
+
+app.post("/acceptClaim", (req, res) => {
+
+    ds.acceptClaim(req.body.employeeID).then(result => {
+        res.status(result.statusCode).json(result)
+
+    })
+})
+
+
+app.post("/view", (req, res) => {
+
+    ds.view(req.body.employeeID).then(result => {
+        res.status(result.statusCode).json(result)
+
+    })
+})
+
+app.listen(3001, () => {
+    console.log("server started at 3001");
 })
