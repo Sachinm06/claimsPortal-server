@@ -15,8 +15,6 @@ const Employee = mongoose.model("Employee",
         admin: String,
         claims: [],
         accepted:String
-
-
     }
 )
 module.exports = {

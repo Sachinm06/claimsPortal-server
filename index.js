@@ -60,7 +60,7 @@ app.post("/empForm", (req, res) => {
 //view status
 
 app.post("/viewStatus", (req, res) => {
-    ds.viewStatus(req.body.empid1).then(result => {
+    ds.view(req.body.empid).then(result => {
         res.status(result.statusCode).json(result)
     })
 })
@@ -85,22 +85,24 @@ app.get("/adminLogin", (req, res) => {
     });
 });
 
-app.post("/acceptClaim", (req, res) => {
+//accept claim
 
-    ds.acceptClaim(req.body.employeeID).then(result => {
+app.post("/accept", (req, res) => {
+
+    ds.accept(req.body.userN).then(result => {
         res.status(result.statusCode).json(result)
 
     })
 })
 
 
-app.post("/view", (req, res) => {
+// app.post("/view", (req, res) => {
 
-    ds.view(req.body.employeeID).then(result => {
-        res.status(result.statusCode).json(result)
+//     ds.view(req.body.employeeID).then(result => {
+//         res.status(result.statusCode).json(result)
 
-    })
-})
+//     })
+// })
 
 app.listen(3001, () => {
     console.log("server started at 3001");

@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 const db = require("./db")
 const { v4: uuidv4 } = require('uuid');
 const { accepts } = require("express/lib/request");
+const { status } = require("express/lib/response");
 
 
 
@@ -80,7 +81,9 @@ submitClaim = (empid, date, reason, amount) => {
                 EmployeeID: empid,
                 Amount: amount,
                 Reason: reason,
-                id: id
+                id: id,
+                // accepted:String
+
             })
             user.save()
             return {
@@ -96,7 +99,7 @@ submitClaim = (empid, date, reason, amount) => {
 
             return {
                 status: false,
-                message: "user not present",
+                message: "user not found",
                 statusCode: 404
 
 
@@ -107,17 +110,7 @@ submitClaim = (empid, date, reason, amount) => {
     )
 }
 
-viewStatus = (empid1) => {
-    return db.Employee.findOne({ employeeID: empid1 }).then(user => {
-        if (user) {
-            return {
-                status: true,
-                claims: user.claims,
-                statusCode: 200
-            }
-        }
-    })
-}
+
 
 deleteClaim = (claimid) => {
     console.log("hey", claimid);
@@ -156,45 +149,174 @@ adminLogin = () => {
         }
     })
 }
-acceptClaim = (employeeID) => {
-    return db.Employee.findOne({ employeeID }).then(user => {
-        if (user) {
-            user.accepted = "accepted"
-            user.save()
-            return {
-                status: true,
-                message: "Applicaton Accepted",
-                statusCode: 200
-            }
+// accept = (userN) => {
+//     return db.Employee.findOne({ username: userN }).then(user => {
+//         if (user) {
+//             user.accepted = "accepted"
+//             user.save()
+//             return {
+//                 status: true,
+//                 message: "Applicaton Accepted",
+//                 statusCode: 200
+//             }
 
+//         }
+//         else {
+//             return {
+//                 status: false,
+//                 message: "Error",
+//                 statusCode: 404
+//             }
+//         }
+//     })
+// }
+accept = (userN) => {
+    return db.Employee.findOne({ username: userN }).then(user => {
+  
+  
+      if (user) {
+        user.accepted = "accepted"
+        user.save()
+        return {
+  
+          status: true,
+          message: "application accepted",
+          statusCode: 200
+  
+  
+  
+  
         }
-        else {
-            return {
-                status: false,
-                message: "Application reject",
-                statusCode: 404
-            }
+      }
+      else {
+        return {
+  
+          status: false,
+          message: "application reject",
+          statusCode: 404
+  
+  
+  
+  
         }
+      }
+  
+  
     })
-}
+  }
+// accept = (userN) => {
+//     return db.Employee.findOne({ username: userN }).then(user => {
+//         if (user) {
+//             const claims = user.claims || []
+//             claims.push({ accepted: "accepted" })
+//             user.claims = claims
+//             user.save()
+//             return {
+//                 status: true,
+//                 message: "Application Accepted",
+//                 statusCode: 200
+//             }
+//         } else {
+//             return {
+//                 status: false,
+//                 message: "Error",
+//                 statusCode: 404
+//             }
+//         }
+//     })
+// }
 
-view=(employeeID)=>{
-    return db.Employee.findOne({employeeID}).then(user=>{
-        if(user){
-            if(user.accepted=="accepted"){
-                return{
-                    status:true,
-                    message:"Claim accepted",
-                    statusCode:200,
 
+
+// view = (empid) => {
+//     return db.Employee.findOne({ employeeID: empid }).then(user => {
+//         if (user) {
+//             if (user.accepted == "accepted") {
+//                 return {
+//                     status: true,
+//                     message: "accepted",
+//                     claims: user.claims,
+//                     statusCode: 200
+//                 }
+//             }
+//             else {
+//                 return {
+//                     status: false,
+//                     message: "Pending",
+//                     statusCode: 404
+//                 }
+//             }
+
+//         }
+//     })
+// }
+
+view = (empid) => {
+
+    return db.Employee.findOne({ employeeID: empid }).then(user => {
+        if (user) {
+            if (user.accepted == "accepted") {
+                return {
+                    status: true,
+                    message: "Accepted ",
+                    statusCode: 200
+
+                }
+            }
+            else if (user.accepted == "Rejected") {
+
+                return {
+                    status: true,
+                    message: "Rejected",
+                    statusCode: 200
+
+                }
+            }
+            else {
+                return {
+                    status: true,
+                    message: "",
+                    statusCode: 200
                 }
             }
         }
     })
+
+
 }
+
+// view = (empid) => {
+//     return db.Employee.findOne({ employeeID: empid }).then(user => {
+//         if (user) {
+//             const claims = user.claims || []
+//             const acceptedClaims = claims.filter(res => res.accepted === "accepted")
+//             if (acceptedClaims.length > 0) {
+//                 return {
+//                     status: true,
+//                     message: "Accepted",
+//                     claims: acceptedClaims,
+//                     statusCode: 200
+//                 }
+//             } else {
+//                 return {
+//                     status: false,
+//                     message: "Pending",
+//                     statusCode: 404
+//                 }
+//             }
+//         } else {
+//             return {
+//                 status: false,
+//                 message: "Employee not found",
+//                 statusCode: 404
+//             }
+//         }
+//     })
+// }
+
 
 
 
 module.exports = {
-    register, login, submitClaim, viewStatus, deleteClaim, adminLogin,acceptClaim,view
+    register, login, submitClaim, deleteClaim, adminLogin, accept, view
 }
